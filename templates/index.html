@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Net Speeds</title>
+</head>
+<body>
+    <div>
+        <canvas id="downloadChart"></canvas>
+    </div>
+    <div>
+        <canvas id="uploadChart"></canvas>
+    </div>
+    <div>
+        <canvas id="pingChart"></canvas>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script>
+        function BuildChart(canvas_id, labels, ds_label, data, bg_color) {
+            var ctx = document.getElementById(canvas_id).getContext('2d');
+            var chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'line',
+
+                // The data for our dataset
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: ds_label,
+                        backgroundColor: bg_color,
+                        borderColor: bg_color,
+                        data: data
+                    }]
+                },
+
+                // Configuration options go here
+                options: {}
+            });
+
+            return chart
+        }
+
+        BuildChart('downloadChart', {{ labels|safe }}, 'Download Speed (Mbps)', {{ downloads|safe }}, 'rgb(0, 204, 102)');
+        BuildChart('uploadChart', {{ labels|safe }}, 'Upload Speed (Mbps)', {{ uploads|safe }}, 'rgb(0, 153, 255)');
+        BuildChart('pingChart', {{ labels|safe }}, 'Ping', {{ pings|safe }}, 'rgb(255,  204, 102)');
+    </script>
+</body>
+</html>
