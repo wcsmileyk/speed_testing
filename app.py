@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import datetime
 import json
 from dateutil import parser
@@ -55,4 +57,4 @@ def check_date(date_string, td):
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')

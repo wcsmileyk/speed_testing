@@ -1,6 +1,7 @@
+import sys
 from peewee import *
 
-db = SqliteDatabase('speed_testing.db')
+db = SqliteDatabase('/home/pi/speed_testing/speed_testing.db')
 
 
 class BaseModel(Model):
@@ -52,5 +53,17 @@ class Result(BaseModel):
                 'server': self.server.st_id}
 
 
+def make_db():
+    db.connect()
+    db.create_tables([Server, Result])
 
 
+if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        if sys.argv[1] == 'create':
+            print('Creating Database')
+            make_db()
+        else:
+            print('No idea what that command means. Use "create" to build the database')
+    else:
+        print("You didn't tell me to do anything")
