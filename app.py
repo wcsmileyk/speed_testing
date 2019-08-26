@@ -7,7 +7,6 @@ from flask import Flask, render_template, jsonify, request
 from models import Result, Server
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'averylongbigstupidsecretkeythingamajigblopideeedooo'
 
 
 def get_results(days=5):
