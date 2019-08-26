@@ -19,6 +19,17 @@ class Server(BaseModel):
     lat = CharField()
     lon = CharField()
 
+    def to_json(self):
+        return {'speed_test_id': self.st_id,
+                'name': self.name,
+                'sponsor': self.sponsor,
+                'url': self.url,
+                'url_1': self.url1,
+                'country_code': self.cc,
+                'host': self.host,
+                'lat': self.lat,
+                'long': self.lon}
+
 
 class Result(BaseModel):
     timestamp = DateTimeField(null=False)
@@ -29,6 +40,16 @@ class Result(BaseModel):
     latency = FloatField()
     client = CharField(max_length=16)
     server = ForeignKeyField(Server, related_name='server_results')
+
+    def to_json(self):
+        return {'timestamp': self.timestamp,
+                'download': self.download_spd,
+                'upload': self.upload_spd,
+                'bytes_sent': self.bytes_sent,
+                'bytes_received': self.bytes_rec,
+                'ping': self.latency,
+                'ip': self.client,
+                'server': self.server.st_id}
 
 
 

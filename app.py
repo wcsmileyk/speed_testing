@@ -1,7 +1,8 @@
 import datetime
 import json
-from flask import Flask, render_template
-from models import Result
+from dateutil import parser
+from flask import Flask, render_template, jsonify, request
+from models import Result, Server
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'averylongbigstupidsecretkeythingamajigblopideeedooo'
@@ -28,8 +29,29 @@ def hello_world():
         uploads.append(test.upload_spd / 1000000)
         pings.append(test.latency)
 
-    print(labels)
     return render_template('index.html', labels=json.dumps(labels), downloads=json.dumps(downloads), uploads=json.dumps(uploads), pings=json.dumps(pings))
+
+
+@app.route('/api/servers', methods=['GET'])
+def server_api():
+    result = {'success': True, 'data': [server.to_json() for server in Server.select()]}
+    return jsonify(result)
+
+
+@app.route('/api/results')
+def results_api():
+    from_date = check_date(request.args.get('from_date'), 30)
+    to_date = check_date(request.args.get('to_date'), 0)
+
+    results = Result.select().where((Result.timestamp >= from_date) & (Result.timestamp <= to_date))
+    return jsonify({'success': True, 'data': [result.to_json() for result in results]})
+
+
+def check_date(date_string, td):
+    try:
+        return parser.parse(date_string)
+    except (ValueError, TypeError):
+        return datetime.datetime.now() - datetime.timedelta(td)
 
 
 if __name__ == '__main__':
